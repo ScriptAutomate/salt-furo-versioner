@@ -3,6 +3,16 @@ from collections import namedtuple
 Version = namedtuple("Version", "name,url")
 
 
+def _to_version(*, thing, url_prefix):
+    if isinstance(thing, str):
+        return Version(name=thing, url=f"{url_prefix}{thing}".lower())
+    else:
+        try:
+            return Version(name=thing.name, url=f"{url_prefix}{thing.url}")
+        except AttributeError:
+            return Version(name=thing[0], url=f"{url_prefix}{thing[1]}")
+
+
 def make_html_context(*, current_release, latest_version, versions, url_prefix="./"):
     if isinstance(versions, str):
         raise TypeError(
@@ -13,7 +23,7 @@ def make_html_context(*, current_release, latest_version, versions, url_prefix="
     current_version = Version(name=current_release, url=f"{url_prefix}{current_release}/")
 
     versions = [
-        Version(name=f"{version}", url=f"{url_prefix}{version}/") for version in version_names
+        _to_version(thing=version, url_prefix=url_prefix) for version in version_names
     ]
 
     html_context = {
