@@ -13,14 +13,14 @@ def _to_version(*, thing, url_prefix):
             return Version(name=thing[0], url=f"{url_prefix}{thing[1]}")
 
 
-def make_html_context(*, current_release, latest_version, versions, url_prefix="./"):
+def make_html_context(*, current_version, latest_version, versions, url_prefix="./"):
     if isinstance(versions, str):
         raise TypeError(
             f"other_versions {other_versions} was str, not list. Probably not what you wanted."
         )
     version_names = versions
     latest_version = Version(name=latest_version, url=f"{url_prefix}{latest_version}/")
-    current_version = Version(name=current_release, url=f"{url_prefix}{current_release}/")
+    current_version = Version(name=current_version, url=f"{url_prefix}{current_version}/")
 
     versions = [
         _to_version(thing=version, url_prefix=url_prefix) for version in version_names
